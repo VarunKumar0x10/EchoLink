@@ -8,6 +8,7 @@
 #include <Audioclient.h>
 #include <endpointvolume.h>
 #include <Functiondiscoverykeys_devpkey.h>
+#include <shellapi.h>
 #include "resource.h"
 
 #include <iostream>
@@ -17,6 +18,7 @@
 #include <atomic>
 
 #pragma comment(lib, "dwmapi.lib")
+#pragma comment(lib, "shell32.lib")
 
 // Dear ImGui
 #include <imgui.h>
@@ -80,6 +82,26 @@ void MuteDevice(IMMDevice *pDevice)
     {
         pVolume->SetMute(TRUE, nullptr);
         SAFE_RELEASE(pVolume);
+    }
+}
+
+void DrawClickableLink(const char* displayText, const char* url)
+{
+    // Draw text in a hyper-link blue color
+    ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), "%s", displayText);
+    
+    if (ImGui::IsItemHovered())
+    {
+        // Change the mouse cursor to a pointing hand
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        
+        // Optional: Show the destination URL as a tooltip
+        ImGui::SetTooltip("Open in browser:\n%s", url);
+        
+        if (ImGui::IsItemClicked())
+        {
+            ShellExecuteA(nullptr, "open", url, nullptr, nullptr, SW_SHOWNORMAL);
+        }
     }
 }
 
@@ -332,6 +354,8 @@ int main()
     ImGuiIO &io = ImGui::GetIO();
     (void)io;
 
+    io.IniFilename = nullptr; // Dont create imgui.ini file
+
     // FONT
     io.Fonts->AddFontFromFileTTF(
         "C:\\Windows\\Fonts\\segoeui.ttf",
@@ -549,15 +573,16 @@ int main()
             ImGui::Spacing();
             
             ImGui::Text("Download VB-Cable:");
-            ImGui::InputText("##vblink", (char*)"https://vb-audio.com/Cable/", 64, ImGuiInputTextFlags_ReadOnly);
+            DrawClickableLink("https://vb-audio.com/Cable/", "https://vb-audio.com/Cable/");
             
             ImGui::Spacing();
             ImGui::Text("Instructions:");
             ImGui::Text("1. Install VB-Cable.\n2. Restart PC.\n3. Open EchoLink and select 'CABLE Output' as source.");
             ImGui::Spacing();
             
-            ImGui::TextDisabled("Made by Dinoking");
-            ImGui::TextDisabled("GitHub: https://github.com/Dinoking/EchoLink");
+            ImGui::TextDisabled("Made by VarunKumar0x10");
+            ImGui::SameLine(); 
+            DrawClickableLink("View GitHub Repository", "https://github.com/VarunKumar0x10/EchoLink");
             
             ImGui::Spacing();
             if (ImGui::Button("Close", ImVec2(120, 0)))
