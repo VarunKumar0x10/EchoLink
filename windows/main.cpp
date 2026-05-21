@@ -9,7 +9,6 @@
 #include <endpointvolume.h>
 #include <Functiondiscoverykeys_devpkey.h>
 #include <shellapi.h>
-#include "resource.h"
 
 #include <iostream>
 #include <vector>
