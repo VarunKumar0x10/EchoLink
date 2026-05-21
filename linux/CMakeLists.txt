@@ -13,20 +13,22 @@ pkg_check_modules(PULSE REQUIRED libpulse-simple libpulse)
 find_package(OpenGL REQUIRED)
 find_package(Threads REQUIRED)
 
+set(IMGUI_DIR "../third_party/imgui")
+
 set(IMGUI_SOURCES
-    imgui/imgui.cpp
-    imgui/imgui_draw.cpp
-    imgui/imgui_tables.cpp
-    imgui/imgui_widgets.cpp
-    imgui/backends/imgui_impl_glfw.cpp
-    imgui/backends/imgui_impl_opengl3.cpp
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
 add_executable(echolink main.cpp ${IMGUI_SOURCES})
 
 target_include_directories(echolink PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends
+    ${IMGUI_DIR}
+    ${IMGUI_DIR}/backends
     ${PULSE_INCLUDE_DIRS}
 )
 
