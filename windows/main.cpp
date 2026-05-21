@@ -291,7 +291,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // Pallete mode = 32 bit RGBA (4bytes/pixel)
 // ============================================================
 
-static const int8_t soundicon_48[] = {
+static const uint32_t soundicon_48[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x80808002, 0x60606008, 0x71556312, 0x6a4f6a1d, 0x6e55661e, 0x6d556115, 0x71557109, 0x55555503, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x55555503, 0x70526619, 0x6d55653f, 0x6d526673, 0x6b53679f, 0x6c5467bd, 0x6c5367cf, 0x6b5367df, 0x6c5366e0, 0x6c5367d2, 0x6c5268c0, 0x6c5368a5, 0x6d52677c, 0x6a516748, 0x6b526b1f, 0x80555506, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -341,51 +341,52 @@ static const int8_t soundicon_48[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000001, 0x60606008, 0x695a6911, 0x6d52641c, 0x6a4f6a1d, 0x6b516b13, 0x71557109, 0x80808002, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
 
-HICON CreateIconFromRGBA(const uint8_t *rgba, int width, int height)
-{
-    // Create a DIB section for the color image (Win32 expects BGRA)
-    BITMAPV5HEADER bi = {0};
-    bi.bV5Size = sizeof(BITMAPV5HEADER);
-    bi.bV5Width = width;
-    bi.bV5Height = -height; // Negative indicates top-down drawing
-    bi.bV5Planes = 1;
-    bi.bV5BitCount = 32;
-    bi.bV5Compression = BI_BITFIELDS;
-    bi.bV5RedMask = 0x00FF0000;
-    bi.bV5GreenMask = 0x0000FF00;
-    bi.bV5BlueMask = 0x000000FF;
-    bi.bV5AlphaMask = 0xFF000000;
+HICON CreateIconFromRGBA(const uint32_t* srcPixels, int width, int height) {
+    // Use the standard BITMAPINFOHEADER (BI_RGB inherently implies BGRA byte order for 32-bit)
+    BITMAPINFOHEADER bmi = { 0 };
+    bmi.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.biWidth = width;
+    bmi.biHeight = -height; // Negative means top-down drawing (prevents it from being upside down)
+    bmi.biPlanes = 1;
+    bmi.biBitCount = 32;
+    bmi.biCompression = BI_RGB; 
 
     HDC hdc = GetDC(NULL);
-    void *lpBits;
-    HBITMAP hBitmap = CreateDIBSection(hdc, (BITMAPINFO *)&bi, DIB_RGB_COLORS, &lpBits, NULL, 0);
+    uint8_t* pPixels = nullptr;
+    HBITMAP hBitmap = CreateDIBSection(hdc, (BITMAPINFO*)&bmi, DIB_RGB_COLORS, (void**)&pPixels, NULL, 0);
     ReleaseDC(NULL, hdc);
+    
+    if (!hBitmap || !pPixels) return NULL;
 
-    if (!hBitmap)
-        return NULL;
+    // Mathematically unpack the 0xRRGGBBAA hex values and explicitly write them as B, G, R, A
+    for (int i = 0; i < width * height; ++i) {
+        uint32_t pixel = srcPixels[i];
+        
+        uint8_t r = (pixel >> 24) & 0xFF;
+        uint8_t g = (pixel >> 16) & 0xFF;
+        uint8_t b = (pixel >> 8)  & 0xFF;
+        uint8_t a =  pixel        & 0xFF;
 
-    // Copy pixels and swizzle from RGBA to BGRA
-    uint8_t *dest = (uint8_t *)lpBits;
-    for (int i = 0; i < width * height * 4; i += 4)
-    {
-        dest[i + 0] = rgba[i + 2]; // B
-        dest[i + 1] = rgba[i + 1]; // G
-        dest[i + 2] = rgba[i + 0]; // R
-        dest[i + 3] = rgba[i + 3]; // A
+        // Windows 32-bit DIB expects BGRA order in memory
+        pPixels[i * 4 + 0] = b;
+        pPixels[i * 4 + 1] = g;
+        pPixels[i * 4 + 2] = r;
+        pPixels[i * 4 + 3] = a;
     }
 
-    // Create a monochrome mask bitmap (required for CreateIconIndirect)
-    HBITMAP hMonoBitmap = CreateBitmap(width, height, 1, 1, NULL);
+    // Windows requires a mask bitmap for CreateIconIndirect, even if we are using the Alpha channel
+    HBITMAP hbmMask = CreateBitmap(width, height, 1, 1, NULL);
 
-    ICONINFO ii = {0};
+    ICONINFO ii = { 0 };
     ii.fIcon = TRUE;
-    ii.hbmMask = hMonoBitmap;
+    ii.hbmMask = hbmMask;
     ii.hbmColor = hBitmap;
 
     HICON hIcon = CreateIconIndirect(&ii);
 
+    // Clean up GDI objects
     DeleteObject(hBitmap);
-    DeleteObject(hMonoBitmap);
+    DeleteObject(hbmMask);
 
     return hIcon;
 }
@@ -409,7 +410,7 @@ int main()
     // ========================================================
 
     // Generate the HICON from your byte array
-    HICON appIcon = CreateIconFromRGBA((const uint8_t *)soundicon_48, 48, 48);
+    HICON appIcon = CreateIconFromRGBA(soundicon_48, 48, 48);
 
     WNDCLASSEXW wc = {
         sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L,
